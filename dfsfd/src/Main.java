@@ -2,33 +2,33 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 public class Main {
-	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	static StringTokenizer st;
-	public static void main(String[] args) throws IOException {
-		int n = Integer.parseInt(br.readLine());
-		int [] [] data = new int [n] [2];
-		long p = 0;
-		for (int i = 0; i < n; i++) {
-			st = new StringTokenizer(br.readLine(), " ");
-			data[i][0] = Integer.parseInt(st.nextToken());
-			data[i][1] = Integer.parseInt(st.nextToken());
-			p += data[i][1];
-		}
-		Arrays.sort(data, (o1, o2) -> {
-			return o1[0] - o2[0];
-		});
-		for (int i = 0; i < n; i++) {
-			p -= data[i][1] * 2;
-			if (p <= 0) {
-				System.out.println(data[i][0]);
-				break;
+	
+	static int finding (char [] data, int start, int end) {
+		char selected = '\0';
+		int temp = -1;
+		for (int i = start; i <= end; i++) {
+			if (selected < data[i]) {
+				selected = data[i];
+				temp = i + 1;
 			}
+		}
+		System.out.print(selected);
+		return temp;
+	}
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
+		st = new StringTokenizer(br.readLine(), " ");
+		int n = Integer.parseInt(st.nextToken());
+		int k = Integer.parseInt(st.nextToken());
+		char [] data = br.readLine().toCharArray();
+		int s = 0, e = k;
+		for (int i = 0; i < n-k; i++) {
+			s = finding(data, s, e++);
 		}
 	}
 }
