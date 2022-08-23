@@ -8,13 +8,6 @@ import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 public class Main {
-<<<<<<< Updated upstream
-	public static void main(String[] args) {
-		System.out.println("dddd");
-		System.out.println("dfisfjief");
-		System.out.println("ddjfskdjf");
-		System.out.println("dddfdfs");
-=======
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringTokenizer st;
 	public static void main(String[] args) throws IOException {
@@ -37,6 +30,5 @@ public class Main {
 				break;
 			}
 		}
->>>>>>> Stashed changes
 	}
 }
