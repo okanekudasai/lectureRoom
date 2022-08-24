@@ -12,7 +12,7 @@ class Pair {
 		this.y = y;
 	}
 }
-
+//sub확인
 public class Main {
 	static int n, shark_x, shark_y, shark_size = 2, shark_eat = 0;
 	static int [] [] map, step, delta = {{0,1},{1,0},{0,-1},{-1,0}};
@@ -76,7 +76,6 @@ public class Main {
 				shark_size++;
 			}
 		}
-		
 		System.out.println(answer);
 	}
 }
