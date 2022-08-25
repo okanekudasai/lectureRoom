@@ -1,81 +1,54 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.StringTokenizer;
 
-class Pair {
-	int x, y;
-	Pair (int x, int y) {
-		this.x = x;
-		this.y = y;
-	}
-}
-//sub확인
-public class Main {
-	static int n, shark_x, shark_y, shark_size = 2, shark_eat = 0;
-	static int [] [] map, step, delta = {{0,1},{1,0},{0,-1},{-1,0}};
+public class Main {	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
-		n = Integer.parseInt(br.readLine());
-		map = new int [n] [n];
-		step = new int [n] [n];
-		for (int i = 0; i < n; i++) {
+		st = new StringTokenizer(br.readLine(), " ");
+		int v = Integer.parseInt(st.nextToken());
+		int e = Integer.parseInt(st.nextToken());
+		int k = Integer.parseInt(br.readLine());
+		ArrayList<int []> [] graph = new ArrayList [v+1];
+		int [] answer = new int [v+1];
+		Arrays.fill(answer, 2000000);
+		for (int i = 0; i < e; i++) {
 			st = new StringTokenizer(br.readLine(), " ");
-			for (int j = 0; j < n; j++) {
-				map[i][j] = Integer.parseInt(st.nextToken());
-				if (map[i][j] == 9) {
-					shark_x = i;
-					shark_y = j;
-					map[i][j] = 0;
-				}
-			}
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			int c = Integer.parseInt(st.nextToken());
+			if (graph[a] == null) graph[a] = new ArrayList<int []>();
+			int [] temp = {b, c}; graph[a].add(temp);
 		}
-		int answer = 0;
-		while (true) {
-			for (int i = 0; i < n; i++) 
-				for (int j = 0; j < n; j++) 
-					step[i][j] = -1;
-			int min_x = 0, min_y = 0, min_distance = Integer.MAX_VALUE;
-			LinkedList<Pair> q = new LinkedList<>();
-			q.offer(new Pair(shark_x, shark_y));
-			step[shark_x][shark_y] = 0;
-			while (q.size() > 0) {
-				Pair now = q.poll();
-				if (step[now.x][now.y] > min_distance) break;
-				if (0 < map[now.x][now.y] && map[now.x][now.y] < shark_size) {
-					if (min_distance > step[now.x][now.y] || (min_distance == step[now.x][now.y] && (min_x > now.x || (min_x==now.x && min_y > now.y)))) {
-						min_x = now.x;
-						min_y = now.y;
-						min_distance = step[now.x][now.y];
-					}
-				}
-				for (int [] delt : delta) {
-					int next_x = now.x + delt[0];
-					int next_y = now.y + delt[1];
-					if (0 > next_x || next_x >= n || 0 > next_y || next_y >= n) continue;
-					if (0 <= step[next_x][next_y] || map[next_x][next_y] > shark_size) continue;
-					step[next_x][next_y] = step[now.x][now.y] + 1;
-					q.offer(new Pair(next_x, next_y));
+		boolean [] visit = new boolean [v+1];
+		answer[k] = 0;
+		int min_point = 0;
+		int min_value;
+		int cnt = 0;
+		while (min_point != -1 && graph[k] != null) {
+			cnt++;
+			visit[k] = true;
+			min_point = -1;
+			min_value = Integer.MAX_VALUE;
+			for (int [] i : graph[k]) {
+				answer[i[0]] = Math.min(answer[i[0]], answer[k] + i[1]);
+				if (visit[i[0]] == false && min_value > answer[i[0]]) {
+					min_value = answer[i[0]];
+					min_point = i[0];
 				}
 			}
-			
-			if (min_distance == Integer.MAX_VALUE) {
-				break;	
-			}
-						
-			map[min_x][min_y] = 0;
-			answer += min_distance;
-			shark_x = min_x;
-			shark_y = min_y;
-			shark_eat++;
-			if (shark_eat >= shark_size) {
-				shark_eat = 0;
-				shark_size++;
-			}
+			System.out.println(Arrays.toString(answer));
+			k = min_point;
+			System.out.println(k);
+			if (cnt >= 4) break;
 		}
-		System.out.println(answer);
+//		for (int i = 1; i <= v; i++) {
+//			if (answer[i] >= 2000000) System.out.println("INF");
+//			else System.out.println(answer[i]);
+//		}
 	}
 }
