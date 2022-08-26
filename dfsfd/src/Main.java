@@ -6,10 +6,12 @@ import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 class Node {
-	int next;
+	int r;
+	int c;
 	int weight;
-	Node(int next, int weight) {
-		this.next = next;
+	public Node(int r, int c, int weight) {
+		this.r = r;
+		this.c = c;
 		this.weight = weight;
 	}
 }
@@ -18,34 +20,30 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
-		st = new StringTokenizer(br.readLine(), " ");
-		int v = Integer.parseInt(st.nextToken());
-		int e = Integer.parseInt(st.nextToken());
-		int k = Integer.parseInt(br.readLine());
-		PriorityQueue<Node> [] pq = new PriorityQueue [v+1];
-		for(int i = 0; i < e; i++) {
+		int n = Integer.parseInt(br.readLine());
+		int [] [] map = new int [n] [n];
+		int [] [] delta = {{0,1},{1,0},{0,-1},{-1,0}};
+		for (int i = 0; i < n; i++) {
 			st = new StringTokenizer(br.readLine(), " ");
-			int a = Integer.parseInt(st.nextToken());
-			int b = Integer.parseInt(st.nextToken());
-			int c = Integer.parseInt(st.nextToken());
-			if (pq[a] == null) pq[a] = new PriorityQueue<Node>((o1, o2) -> {return o1.weight - o2.weight;});
-			pq[a].offer(new Node(b, c));
-		}
-		int [] answer = new int [v+1];
-		Arrays.fill(answer, -1);
-		answer[k] = 0;
-		while (pq[k].size() > 0) {
-			Node temp = pq[k].poll();
-			if (answer[temp.next] != -1) continue;
-			answer[temp.next] = temp.weight;
-			if (pq[temp.next] == null) continue;
-			for (Node node : pq[temp.next]) {
-				pq[k].offer(new Node(node.next, temp.weight + node.weight));
+			for (int j = 0; j < n; j++) {
+				map[i][j] = Integer.parseInt(st.nextToken());
 			}
 		}
-		for (int i = 1; i <= v; i++) {
-			if (answer[i] == -1) System.out.println("INF");
-			else System.out.println(answer[i]);
+		int [] [] answer = new int [n] [n];
+		for (int i = 0; i < n; i++) Arrays.fill(answer[i], -1);
+		answer[0][0] = map[0][0];
+		PriorityQueue<Node> pq = new PriorityQueue<>((o1, o2) -> {return o1.weight - o2.weight;});
+		pq.offer(new Node(0,0,map[0][0]));
+		while (pq.size() > 0) {
+			Node now = pq.poll();
+			for (int [] delt : delta) {
+				int next_r = now.r+delt[0];
+				int next_c = now.c+delt[1];
+				if (next_r < 0 || next_r >= n || next_c < 0 || next_c >= n) continue;
+				if (answer[next_r][next_c] != -1) continue;
+				answer[next_r][next_c] = answer[now.r][now.c] + map[next_r][next_c];
+				pq.offer(new Node(next_r, next_c, answer[next_r][next_c]));
+			}
 		}
 	}
 }
